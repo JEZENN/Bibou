@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pour ma Bibou 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --rose:     #f2879a;
+      --rose-deep:#c85c72;
+      --gold:     #e8c97e;
+      --cream:    #fff8f4;
+      --soft:     #fde8ee;
+      --dark:     #2a1a1f;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--dark);
+      font-family: 'Quicksand', sans-serif;
+      overflow-x: hidden;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23f2879a' d='M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z'/%3E%3C/svg%3E"), auto;
+    }
+
+    /* ── HEARTS CANVAS ── */
+    #hearts-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, #fde8ee 0%, var(--cream) 70%);
+      z-index: -1;
+    }
+
+    .hero-badge {
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.3s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--dark);
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--rose-deep);
+    }
+
+    .hero-subtitle {
+      margin-top: 18px;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 300;
+      color: #7a4f58;
+      max-width: 480px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.9s forwards;
+    }
+
+    .scroll-hint {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      animation: fadeUp 0.9s 1.4s forwards;
+    }
+
+    .scroll-hint span { font-size: 0.7rem; letter-spacing: 3px; color: var(--rose); text-transform: uppercase; }
+
+.scroll-arrow {
+  width: 18px;
+  height: 18px;
+  border-right: 3px solid var(--rose);
+  border-bottom: 3px solid var(--rose);
+  transform: rotate(45deg);
+  animation: bounce 1.5s infinite;
+  margin-top: 10px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(45deg); }
+  50% { transform: translateY(8px) rotate(45deg); }
+}
+
+
+
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 0 auto 60px;
+      max-width: 300px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .divider.visible { opacity: 1; transform: translateY(0); }
+    .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--rose), transparent); }
+    .divider-heart { color: var(--rose); font-size: 1rem; animation: pulse 1.5s ease-in-out infinite; }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: clamp(40px, 8vw, 80px) clamp(16px, 5vw, 40px);
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .section-title.visible { opacity: 1; transform: translateY(0); }
+    .section-title em { font-style: italic; color: var(--rose-deep); }
+
+    .section-sub {
+      text-align: center;
+      color: #7a4f58;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 50px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.7s 0.1s, transform 0.7s 0.1s;
+    }
+    .section-sub.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── PHOTO GRID ── */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 640px) {
+      .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .photo-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .photo-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--soft);
+      border: 2px dashed #f0a8b8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .photo-card.visible { opacity: 1; transform: translateY(0); }
+
+    /* Hover uniquement sur desktop */
+    @media (hover: hover) {
+      .photo-card:hover { transform: translateY(-8px) rotate(1deg); box-shadow: 0 20px 50px rgba(200,92,114,.25); }
+    }
+
+    /* Tap feedback sur mobile */
+    .photo-card:active { transform: scale(0.97); }
+
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+
+
+    .photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--rose);
+      text-align: center;
+      padding: 20px;
+    }
+
+    .photo-placeholder .icon { font-size: 2.5rem; opacity: 0.6; }
+    .photo-placeholder p { font-size: 0.85rem; color: #b07080; font-weight: 500; }
+
+.photo-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(42,26,31,.75), transparent);
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.photo-caption {
+  transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.photo-card:hover .photo-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+    /* Sur desktop : caption visible au hover */
+    @media (hover: hover) {
+      .photo-card:hover .photo-caption { opacity: 1; }
+    }
+
+    /* Sur mobile/tactile : caption toujours visible si photo chargée */
+    @media (hover: none) {
+      .photo-caption { opacity: 1 !important; }
+    }
+
+    .photo-file-input { display: none; }
+
+    /* ── LOVE LETTER ── */
+    .letter-section { background: var(--soft); }
+
+    .letter-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      padding: clamp(30px, 5vw, 60px);
+      box-shadow: 0 10px 60px rgba(200,92,114,.12);
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s, transform 0.8s;
+    }
+    .letter-wrapper.visible { opacity: 1; transform: translateY(0); }
+
+    .letter-wrapper::before {
+      content: '❝';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem;
+      color: var(--rose);
+      opacity: 0.15;
+      position: absolute;
+      top: 10px; left: 20px;
+      line-height: 1;
+    }
+
+    .letter-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 300;
+      line-height: 1.9;
+      color: #3a2028;
+      text-align: center;
+    }
+
+    .letter-text em { font-style: italic; color: var(--rose-deep); }
+
+    .letter-signature {
+      margin-top: 32px;
+      text-align: right;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--rose-deep);
+    }
+
+    /* ── REASONS ── */
+    .reasons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .reason-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px 24px;
+      text-align: center;
+      border: 1px solid #fdd8e2;
+      transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s;
+      opacity: 0;
+      transform: translateY(20px) scale(0.96);
+    }
+    .reason-card.visible { opacity: 1; transform: translateY(0) scale(1); }
+    @media (hover: hover) {
+      .reason-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 15px 40px rgba(200,92,114,.18); }
+    }
+    .reason-card:active { transform: scale(0.97); }
+
+    .reason-icon { font-size: 2.2rem; margin-bottom: 14px; display: block; }
+
+    .reason-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .reason-text { font-size: 0.88rem; color: #7a4f58; line-height: 1.7; }
+
+    /* ── TIMELINE ── */
+    .timeline { max-width: 700px; margin: 0 auto; }
+
+    .timeline-item {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .timeline-item.visible { opacity: 1; transform: translateX(0); }
+    .timeline-item:nth-child(even) { flex-direction: row-reverse; transform: translateX(30px); }
+    .timeline-item:nth-child(even).visible { transform: translateX(0); }
+
+    .timeline-dot {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--rose);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem;
+      box-shadow: 0 0 0 6px #fdd8e2;
+      margin-top: 6px;
+    }
+
+    .timeline-content {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      flex: 1;
+      border: 1px solid #fdd8e2;
+    }
+
+    .timeline-date {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 6px;
+    }
+
+    .timeline-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .timeline-desc { font-size: 0.875rem; color: #7a4f58; line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      text-align: center;
+      padding: 60px 20px;
+      color: #c09098;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-heart {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 16px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    footer p { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.2); }
+    }
+
+    @keyframes grow {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50%       { transform: scaleY(0.5); opacity: 0.3; }
+    }
+
+    /* ── FLOATING HEARTS CSS ── */
+    .float-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatUp linear forwards;
+      font-size: 1.2rem;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0) scale(0.5); opacity: 0.8; }
+      100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+    }
+
+    /* ── RIBBON ── */
+    .ribbon {
+      background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ── BUTTON ── */
+    .btn {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 14px 36px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+      color: white;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(200,92,114,.4);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(200,92,114,.55); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .timeline-item, .timeline-item:nth-child(even) {
+        flex-direction: column;
+        transform: translateY(20px);
+      }
+      .timeline-item.visible, .timeline-item:nth-child(even).visible {
+        transform: translateY(0);
+      }
+      .hero { min-height: 90vh; padding: 30px 20px; }
+      .hero-title { font-size: clamp(2.8rem, 15vw, 5rem); }
+      .hero-subtitle { font-size: 1rem; padding: 0 10px; }
+      .letter-wrapper { padding: 28px 20px; }
+      .reasons-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .reason-card { padding: 20px 14px; }
+      .section-sub { font-size: 0.75rem; letter-spacing: 1px; }
+      .timeline-dot { width: 36px; height: 36px; font-size: 0.9rem; }
+    }
+
+    @media (max-width: 380px) {
+      .photo-grid { grid-template-columns: 1fr; }
+      .reasons-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating hearts canvas -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- Ribbon -->
+  <div class="ribbon">✦ Une page rien que pour toi accessible 24h/24h partout ✦</div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <p class="hero-badge">💌 Avec tout mon amour</p>
+    <h1 class="hero-title">Pour ma<br/><em>Bibou</em></h1>
+    <p class="hero-subtitle">Parce que certains sentiments sont trop grands pour un simple message&hellip;</p>
+    <div class="scroll-hint">
+      <span>Défile pour voir la suite...</span>
+  <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ═══ PHOTOS ═══ -->
+  <section id="photos">
+    <div class="divider"><div class="divider-line"></div><span class="divider-heart">♥</span><div class="divider-line"></div></div>
+    <h2 class="section-title">Nos <em>souvenirs</em></h2>
+    <p class="section-sub">Appuie sur une photo pour voir la petite description</p>
+
+    <div class="photo-grid">
+      <!-- PHOTO 1 -->
+<div class="photo-card">
+  <img src="photo1.jpg" alt="Notre photo"/>
+  <div class="photo-caption">Ton plus jolie sourire 💕</div>
+</div>
+
+
+     <!-- PHOTO 2 -->
+
+	  
+<div class="photo-card">
+  <img src="photo2.jpg" alt="Notre photo"/>
+  <div class="photo-caption">Tout beau en noir et blanc 🌸</div>
+</div>
+
+
+      <!-- PHOTO 3 -->
+	  
+	  <div class="photo-card">
+  <img src="photo3.jpg" alt="Notre photo"/>
+  <div class="photo-caption">La vie de riche 🌙</div>
+</div>
+	  
+
+      <!-- PHOTO 4 -->
+
+	  
+	  <div class="photo-card">
+  <img src="photo4.jpg" alt="Notre photo"/>
+  <div class="photo-caption">Carabins 💫</div>
+</div>
+
+    </div>
+  </section>
+
+  <!-- ═══ LETTRE ═══ -->
+  <section class="letter-section">
+    <div class="divider"><div class="divider-line"></div><span class="divider-heart">♥</span><div class="divider-line"></div></div>
+    <h2 class="section-title">Une <em>lettre</em> pour toi</h2>
+    <p class="section-sub">Depuis le fond de mon cœur</p>
+
+    <div class="letter-wrapper">
+      <p class="letter-text">
+        Ma bibou,<br/><br/>
+        Il y a des personnes qui entrent dans ta vie et qui changent tout. Qui illuminent chaque journée sans même s'en rendre compte. <em>Tu es cette personne pour moi.</em><br/><br/>
+        Avec toi, les petits moments deviennent des souvenirs, et les journées ordinaires deviennent <em>magiques</em>. Je veux que tu saches que tu comptes énormément — plus que tu ne peux l'imaginer.<br/><br/>
+        Merci d'être toi. Merci d'être là. Je t'aime.
+      </p>
+      <p class="letter-signature">— Ton bibou qui t'aime de tout son coeur. 💕</p>
+    </div>
+  </section>
+
+  <!-- ═══ RAISONS ═══ -->
+  <section id="reasons">
+    <div class="divider"><div class="divider-line"></div><span class="divider-heart">♥</span><div class="divider-line"></div></div>
+    <h2 class="section-title">Pourquoi je <em>t'aime</em></h2>
+    <p class="section-sub">Cette liste est loin d’être complète, mais il faudrait des milliers de lignes de code pour tout écrire…</p>
+
+    <div class="reasons-grid">
+      <div class="reason-card">
+        <span class="reason-icon">😄</span>
+        <h3 class="reason-title">Ton rire</h3>
+        <p class="reason-text">Il est la plus belle musique que j'aie jamais entendue. Tu rigoles à toutes mes blagues, même les plus ignobles.</p>
+      </div>
+      <div class="reason-card">
+        <span class="reason-icon">🤗</span>
+        <h3 class="reason-title">Ta douceur</h3>
+        <p class="reason-text">Tu as un cœur immense. Tu me soutiens même quand je suis un mauvais bibou.</p>
+      </div>
+      <div class="reason-card">
+        <span class="reason-icon">🌟</span>
+        <h3 class="reason-title">Ta lumière</h3>
+        <p class="reason-text">Tu illumines mes journées comme personne ne sait le faire. Tout est plus beau à tes cotés.</p>
+      </div>
+      <div class="reason-card">
+        <span class="reason-icon">🧠</span>
+        <h3 class="reason-title">Ton esprit</h3>
+        <p class="reason-text">Tu es brillante, curieuse et drôle. Parler avec toi est mon moment préféré de la journée.</p>
+      </div>
+      <div class="reason-card">
+        <span class="reason-icon">🦋</span>
+        <h3 class="reason-title">Ta spontanéité</h3>
+        <p class="reason-text">Chaque journée avec toi est un délice. Tu rends la vie tellement plus belle.</p>
+      </div>
+      <div class="reason-card">
+        <span class="reason-icon">💪</span>
+        <h3 class="reason-title">Ta force</h3>
+        <p class="reason-text">Tu surmontes tout avec courage et détermination. Tu m'inspires chaque jour à devenir meilleur.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TIMELINE ═══ -->
+  <section style="background: var(--soft);">
+    <div class="divider"><div class="divider-line"></div><span class="divider-heart">♥</span><div class="divider-line"></div></div>
+    <h2 class="section-title">Notre <em>histoire</em></h2>
+    <p class="section-sub">Les chapitres de nous deux</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">✨</div>
+        <div class="timeline-content">
+          <p class="timeline-date">Le début</p>
+          <h3 class="timeline-title">Notre première rencontre au ski</h3>
+          <p class="timeline-desc">Le jour où tout a commencé dans la salle des fêtes du BDE. Je ne savais pas encore à quel point tu allais changer ma vie.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🌸</div>
+        <div class="timeline-content">
+          <p class="timeline-date">Un moment magique</p>
+          <h3 class="timeline-title">Notre premier vrai date au restaurant à coté du chateau de Versailles</h3>
+          <p class="timeline-desc">Ce moment où j'ai réalisé que tu étais quelqu'un de spécial. Quelqu'un que je voulais garder dans ma vie.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">💑</div>
+        <div class="timeline-content">
+          <p class="timeline-date">Ensemble, notre meilleur moment</p>
+          <h3 class="timeline-title">Nos vacances à la montagne</h3>
+          <p class="timeline-desc">Des vacances formidables pendant la période difficile qu'est l'externat. J'aimerais revivre ce moment magique.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">🔮</div>
+        <div class="timeline-content">
+          <p class="timeline-date">Demain</p>
+          <h3 class="timeline-title">Notre futur</h3>
+          <p class="timeline-desc">Encore tellement de souvenirs à créer, d'endroits à découvrir, de choses à partager. Il se fera j'espère avec beaucoup d'enfants.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <span class="footer-heart">💕</span>
+    <p>"Je t'aime — aujourd'hui, demain, et tous les jours qui suivent."</p>
+    <p style="margin-top:12px; font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; font-family:'Quicksand',sans-serif; opacity:0.5;">Fait avec amour, rien que pour toi.</p>
+  </footer>
+
+<script>
+// ── PHOTO LOADER ──
+function loadPhoto(input, imgId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById(imgId);
+    img.src = e.target.result;
+    img.style.display = 'block';
+    const card = img.closest('.photo-card');
+    card.querySelector('.photo-placeholder').style.display = 'none';
+    card.querySelector('.photo-caption').style.display = 'block';
+    card.style.border = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── FLOATING HEARTS ──
+const emojis = ['💕','💖','💗','💝','✨','🌸','💞'];
+const isMobile = window.matchMedia('(max-width: 600px)').matches;
+function spawnHeart() {
+  const el = document.createElement('span');
+  el.className = 'float-heart';
+  el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+  el.style.left = Math.random() * 100 + 'vw';
+  el.style.bottom = '-30px';
+  const dur = 5 + Math.random() * 7;
+  el.style.animationDuration = dur + 's';
+  el.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), dur * 1000);
+}
+// Moins de cœurs sur mobile pour les performances
+setInterval(spawnHeart, isMobile ? 1800 : 900);
+spawnHeart(); spawnHeart();
+
+// ── SCROLL REVEAL ──
+const observers = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 100);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll(
+  '.section-title,.section-sub,.divider,.letter-wrapper,.photo-card,.reason-card,.timeline-item'
+).forEach(el => observers.observe(el));
+
+// stagger photo cards
+document.querySelectorAll('.photo-card').forEach((c, i) => {
+  c.style.transitionDelay = (i * 0.12) + 's';
+});
+
+// stagger reason cards
+document.querySelectorAll('.reason-card').forEach((c, i) => {
+  c.style.transitionDelay = (i * 0.1) + 's';
+});
+</script>
+</body>
+</html>
